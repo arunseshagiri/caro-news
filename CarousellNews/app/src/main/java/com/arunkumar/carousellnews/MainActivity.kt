@@ -188,11 +188,6 @@ class MainActivity : AppCompatActivity() {
         errorMsg.setAction(getString(R.string.dismiss)) { errorMsg.dismiss() }.show()
     }
 
-    override fun onStop() {
-        super.onStop()
-        disposables.clear()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()
