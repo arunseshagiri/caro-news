@@ -37,8 +37,9 @@ class ArticleAdapter(
 
         holder.view.tv_title.text = article.title
         holder.view.tv_description.text = article.description
-        Picasso.get().load(article.bannerUrl).into(holder.view.iv_banner)
-        holder.view.tv_time.text = PrettyTime().format(Date(Timestamp(article.timeCreated).time))
+        Picasso.get().load(article.bannerUrl).placeholder(R.drawable.ic_place_holder).into(holder.view.iv_banner)
+
+        holder.view.tv_time.text = PrettyTime().format(Date(Timestamp(article.timeCreated * 1000).time))
     }
 
     class ArticleViewHolder(val view: View) : RecyclerView.ViewHolder(view)
