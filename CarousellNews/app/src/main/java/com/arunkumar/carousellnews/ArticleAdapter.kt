@@ -3,6 +3,8 @@ package com.arunkumar.carousellnews
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.arunkumar.carousellnews.model.Articles
 import com.squareup.picasso.Picasso
@@ -33,6 +35,9 @@ class ArticleAdapter(
 
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
+        val animation: Animation = AnimationUtils.loadAnimation(holder.view.context, R.anim.abc_slide_in_bottom)
+        holder.view.startAnimation(animation)
+
         val article = articleList[position]
 
         holder.view.tv_title.text = article.title

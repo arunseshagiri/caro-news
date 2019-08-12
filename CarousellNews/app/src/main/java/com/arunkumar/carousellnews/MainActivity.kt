@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
+import android.view.animation.AnimationSet
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -140,13 +141,18 @@ class MainActivity : AppCompatActivity() {
             )
 
     private fun showProgressUI() {
-        val animation: Animation = AnimationUtils.loadAnimation(this, R.anim.rotate)
-        iv_progress.startAnimation(animation)
+        val animationSet = AnimationSet(false)
+        val animRotate: Animation = AnimationUtils.loadAnimation(this, R.anim.rotate)
+        val animSlideIn: Animation = AnimationUtils.loadAnimation(this, R.anim.abc_slide_in_bottom)
+        animationSet.addAnimation(animRotate)
+        animationSet.addAnimation(animSlideIn)
+        iv_progress.startAnimation(animationSet)
         iv_progress.visibility = View.VISIBLE
     }
 
     private fun hideProgressUI() {
-        iv_progress.clearAnimation()
+        val animSlideOut: Animation = AnimationUtils.loadAnimation(this, R.anim.abc_slide_out_bottom)
+        iv_progress.startAnimation(animSlideOut)
         iv_progress.visibility = View.GONE
     }
 
