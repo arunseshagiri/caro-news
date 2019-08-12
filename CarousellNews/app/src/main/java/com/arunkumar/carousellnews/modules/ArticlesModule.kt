@@ -12,10 +12,10 @@ import io.reactivex.disposables.CompositeDisposable
 class ArticlesModule {
 
     @Provides
-    fun retrofitBuilder(): ArticlesRetrofitBuilder = ArticlesRetrofitBuilder()
+    fun provideRetrofitBuilder(): ArticlesRetrofitBuilder = ArticlesRetrofitBuilder()
 
     @Provides
-    fun articleApiService(retrofitBuilder: ArticlesRetrofitBuilder): ArticlesApiService =
+    fun provideArticleApiService(retrofitBuilder: ArticlesRetrofitBuilder): ArticlesApiService =
         ArticlesApiService(retrofitBuilder)
 
     @Provides

@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="4sp"
                     android:textColor="#262629"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:fontFamily="@font/roboto_medium"
                     android:typeface="normal"
                     android:textAlignment="viewStart"
