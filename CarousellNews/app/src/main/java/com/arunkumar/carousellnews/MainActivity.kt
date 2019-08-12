@@ -1,6 +1,7 @@
 package com.arunkumar.carousellnews
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.arunkumar.carousellnews.api.ArticlesApiService
+import com.arunkumar.carousellnews.model.Articles
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -43,7 +45,30 @@ class MainActivity : AppCompatActivity() {
         disposables.add(listenToShowError())
         disposables.add(listenForRecentArticleList())
         disposables.add(listenForPopularArticleList())
-        viewModel.onCreate()
+
+        when {
+            !(savedInstanceState?.containsKey("article_list") ?: false) -> viewModel.onCreate()
+            else -> hideProgressUI()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        when {
+            articleAdapter.articleList().isNotEmpty() -> outState.apply {
+                putParcelableArrayList("article_list", ArrayList<Parcelable>(articleAdapter.articleList()))
+            }
+        }
+
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        when {
+            savedInstanceState.containsKey("article_list") -> savedInstanceState.apply {
+                articleAdapter.articleList(getParcelableArrayList<Articles>("article_list") as MutableList<Articles>)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
