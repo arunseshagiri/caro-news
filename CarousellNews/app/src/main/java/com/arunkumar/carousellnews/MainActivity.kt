@@ -1,6 +1,7 @@
 package com.arunkumar.carousellnews
 
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -12,6 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +40,12 @@ class MainActivity : AppCompatActivity() {
         disposables.add(listenToShowError())
 
         viewModel.fetchArticles()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu_item; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_item, menu)
+        return true
     }
 
     private fun initializeRecyclerView() {

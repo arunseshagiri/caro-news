@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Carousell News</string>
     <string name="error_message">Something went wrong. Please try again when network is available</string>
+    <string name="menu_item_recent">Recent</string>
+    <string name="menu_item_popular">Popular</string>
 </resources>
