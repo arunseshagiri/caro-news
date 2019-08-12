@@ -35,9 +35,10 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
         .observeOn(mainThread())
         .doOnEvent { _, _ -> hideProgress().onNext(Unit) }
         .doOnSubscribe { showProgress().onNext(Unit) }
+        .map { it -> it.sortedWith(compareBy { it.timeCreated }).toMutableList() }
         .subscribe(
             {
-                updateArticleList().onNext(it.toMutableList())
+                updateArticleList().onNext(it)
             },
             { showError().onNext(it.message!!) }
         )
