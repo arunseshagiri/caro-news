@@ -37,7 +37,8 @@
                     android:fontFamily="@font/roboto_medium"
                     android:typeface="normal"
                     android:textAlignment="viewStart"
-                    android:letterSpacing="0.11" android:maxLines="2"/>
+                    android:letterSpacing="0.05" android:maxLines="2"
+            android:layout_marginBottom="8dp"/>
 
             <TextView
                     android:id="@+id/tv_description"
@@ -48,14 +49,14 @@
                     android:fontFamily="@font/roboto"
                     android:typeface="normal"
                     android:textAlignment="viewStart"
-                    android:letterSpacing="0.1" android:maxLines="2" android:lineSpacingExtra="4sp"/>
+                    android:letterSpacing="0.05" android:maxLines="2" android:lineSpacingExtra="4sp"/>
 
             <TextView
                     android:id="@+id/tv_time"
                     android:layout_marginTop="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 hours ago" android:fontFamily="@font/roboto" android:textSize="10sp"
+                    android:text="5 hours ago" android:fontFamily="@font/roboto" android:textSize="12sp"
                     android:textColor="#8F939C"
                     android:lineSpacingExtra="9.33sp"
                     android:letterSpacing="0.06"/>
