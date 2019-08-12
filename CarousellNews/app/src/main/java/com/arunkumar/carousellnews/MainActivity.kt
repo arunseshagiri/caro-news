@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showErrorUI() {
         hideProgressUI()
-        var errorMsg = Snackbar.make(
+        val errorMsg = Snackbar.make(
             main_layout,
             getString(R.string.error_message),
             Snackbar.LENGTH_INDEFINITE
