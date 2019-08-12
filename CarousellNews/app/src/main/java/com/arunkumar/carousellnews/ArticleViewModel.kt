@@ -2,16 +2,24 @@ package com.arunkumar.carousellnews
 
 import com.arunkumar.carousellnews.api.ArticlesApiService
 import com.arunkumar.carousellnews.model.Articles
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
 class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
-    private var updateArticleList: PublishSubject<List<Articles>> = PublishSubject.create()
+    private var updateArticleList: PublishSubject<MutableList<Articles>> = PublishSubject.create()
     private var showProgress: PublishSubject<Unit> = PublishSubject.create()
     private var hideProgress: PublishSubject<Unit> = PublishSubject.create()
     private var showError: PublishSubject<String> = PublishSubject.create()
+    private var articleListSortedForRecent: PublishSubject<MutableList<Articles>> = PublishSubject.create()
+    private var articleListSortedForPopular: PublishSubject<MutableList<Articles>> = PublishSubject.create()
 
-    fun updateArticleList(): PublishSubject<List<Articles>> = updateArticleList
+    fun onCreate() {
+        fetchArticles()
+    }
+
+    fun updateArticleList(): PublishSubject<MutableList<Articles>> = updateArticleList
 
     fun showProgress(): PublishSubject<Unit> = showProgress
 
@@ -19,17 +27,47 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
 
     fun showError(): PublishSubject<String> = showError
 
-    fun fetchArticles() = articlesApiService
+    fun articleListSortedForRecent(): PublishSubject<MutableList<Articles>> = articleListSortedForRecent
+    fun articleListSortedForPopular(): PublishSubject<MutableList<Articles>> = articleListSortedForPopular
+
+    private fun fetchArticles() = articlesApiService
         .articles()
         .observeOn(mainThread())
         .doOnEvent { _, _ -> hideProgress().onNext(Unit) }
         .doOnSubscribe { showProgress().onNext(Unit) }
         .subscribe(
             {
-                updateArticleList().onNext(it)
+                updateArticleList().onNext(it.toMutableList())
             },
             { showError().onNext(it.message!!) }
         )
 
+    fun sortBasedOnRecentArticle(articleList: List<Articles>) = Single
+        .just(articleList)
+        .map { it -> it.sortedWith(compareBy { it.timeCreated }).toMutableList() }
+        .subscribeOn(Schedulers.io())
+        .observeOn(mainThread())
+        .subscribe(
+            {
+                articleListSortedForRecent.onNext(it)
+            },
+            {
+                showError().onNext(it.message!!)
+            }
+        )
+
+    fun sortBasedOnPopularArticle(articleList: List<Articles>) = Single
+        .just(articleList)
+        .map { it -> it.sortedWith(compareBy({ it.rank }, { it.timeCreated })).toMutableList() }
+        .subscribeOn(Schedulers.io())
+        .observeOn(mainThread())
+        .subscribe(
+            {
+                articleListSortedForPopular.onNext(it)
+            },
+            {
+                showError().onNext(it.message!!)
+            }
+        )
 
 }

@@ -2,6 +2,7 @@ package com.arunkumar.carousellnews
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -38,15 +39,47 @@ class MainActivity : AppCompatActivity() {
         disposables.add(listenToShowProgress())
         disposables.add(listenToHideProgress())
         disposables.add(listenToShowError())
-
-        viewModel.fetchArticles()
+        disposables.add(listenForRecentArticleList())
+        disposables.add(listenForPopularArticleList())
+        viewModel.onCreate()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu_item; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_item, menu)
         return true
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.recent -> viewModel.sortBasedOnRecentArticle(articleAdapter.articleList())
+            R.id.popular -> viewModel.sortBasedOnPopularArticle(articleAdapter.articleList())
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun listenForRecentArticleList() =
+        viewModel
+            .articleListSortedForRecent()
+            .subscribe(
+                {
+                    articleAdapter.articleList(it)
+                },
+                {
+                    showErrorUI()
+                }
+            )
+
+    private fun listenForPopularArticleList() =
+        viewModel
+            .articleListSortedForPopular()
+            .subscribe(
+                {
+                    articleAdapter.articleList(it)
+                },
+                {
+                    showErrorUI()
+                }
+            )
 
     private fun initializeRecyclerView() {
         rv_news.setHasFixedSize(true)
@@ -59,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             .updateArticleList()
             .subscribe(
                 {
-                    articleAdapter.articleList(it.toMutableList())
+                    articleAdapter.articleList(it)
                 },
                 {
                     showErrorUI()
@@ -123,5 +156,15 @@ class MainActivity : AppCompatActivity() {
         errorMsg.setAction("Dismiss") {
             errorMsg.dismiss()
         }.show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposables.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
     }
 }

@@ -15,7 +15,10 @@ class ArticleAdapter(
     private val articleList: MutableList<Articles>
 ) : RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder>() {
 
+    fun articleList(): List<Articles> = articleList
+
     fun articleList(articleList: MutableList<Articles>): ArticleAdapter {
+        this.articleList.clear()
         this.articleList.addAll(articleList)
         notifyDataSetChanged()
         return this
