@@ -185,9 +185,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.error_message),
             Snackbar.LENGTH_INDEFINITE
         )
-        errorMsg.setAction("Dismiss") {
-            errorMsg.dismiss()
-        }.show()
+        errorMsg.setAction(getString(R.string.dismiss)) { errorMsg.dismiss() }.show()
     }
 
     override fun onStop() {
