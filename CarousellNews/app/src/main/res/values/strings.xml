@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Carousell News</string>
+    <string name="error_message">Something went wrong. Please try again when network is available</string>
 </resources>

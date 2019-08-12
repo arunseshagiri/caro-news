@@ -38,6 +38,10 @@ android {
         implementation 'androidx.recyclerview:recyclerview:1.0.0'
         implementation 'androidx.cardview:cardview:1.0.0'
         implementation 'com.android.support:multidex:1.0.3'
+        implementation 'com.google.android.material:material:1.0.0'
+
+        //Picasso image
+        implementation 'com.squareup.picasso:picasso:2.71828'
 
         //API
         implementation 'com.squareup.retrofit2:retrofit:2.6.0'
