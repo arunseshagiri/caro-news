@@ -50,7 +50,7 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
         .observeOn(mainThread())
         .subscribe(
             {
-                articleListSortedForRecent.onNext(it)
+                articleListSortedForRecent().onNext(it)
             },
             {
                 showError().onNext(it.message!!)
@@ -64,7 +64,7 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
         .observeOn(mainThread())
         .subscribe(
             {
-                articleListSortedForPopular.onNext(it)
+                articleListSortedForPopular().onNext(it)
             },
             {
                 showError().onNext(it.message!!)
