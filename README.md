@@ -4,7 +4,7 @@
 * Sort the articles based on the time creation by default
 * When user selects “recent” sorting option from actionbar menu, display the list sorted by the time
 * “Popular” option should prioritize the articles first based on the rank and then the time
-* Link to the news: https://storage.googleapis.com/carousell-interview-assets/android/carousell_news.json
+* Link to the news: https://raw.githubusercontent.com/arunseshagiri/caro-news/master/news.json
 * MVVM design pattern
 * OkHttp and Retrofit, Gson converter to make API calls and convert JSON to POJO objects
 * RxJava & RxAndroid
