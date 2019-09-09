@@ -5,6 +5,6 @@ import io.reactivex.Single
 import retrofit2.http.GET
 
 interface ArticlesApi {
-    @GET("carousell_news.json")
+    @GET("news.json")
     fun articles(): Single<List<Articles>>
 }

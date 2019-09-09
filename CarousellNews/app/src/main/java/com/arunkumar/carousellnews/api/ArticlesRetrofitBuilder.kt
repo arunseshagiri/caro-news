@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 class ArticlesRetrofitBuilder {
     private val baseUrl: String =
-        "https://storage.googleapis.com/carousell-interview-assets/android/"
+        "https://raw.githubusercontent.com/arunseshagiri/caro-news/master/"
 
     private fun gson(): Gson = GsonBuilder().setPrettyPrinting().create()
 
