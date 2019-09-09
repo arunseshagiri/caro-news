@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
                 putParcelableArrayList("article_list", ArrayList<Parcelable>(articleAdapter.articleList()))
             }
         }
-
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

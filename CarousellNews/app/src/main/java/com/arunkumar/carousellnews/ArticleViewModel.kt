@@ -35,7 +35,7 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
         .observeOn(mainThread())
         .doOnEvent { _, _ -> hideProgress().onNext(Unit) }
         .doOnSubscribe { showProgress().onNext(Unit) }
-        .map { it -> it.sortedWith(compareBy { it.timeCreated }).toMutableList() }
+        .map { it -> it.sortedWith(compareByDescending { it.timeCreated }).toMutableList() }
         .subscribe(
             {
                 updateArticleList().onNext(it)
@@ -45,7 +45,7 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
 
     fun sortBasedOnRecentArticle(articleList: List<Articles>) = Single
         .just(articleList)
-        .map { it -> it.sortedWith(compareBy { it.timeCreated }).toMutableList() }
+        .map { it -> it.sortedWith(compareByDescending { it.timeCreated }).toMutableList() }
         .subscribeOn(Schedulers.io())
         .observeOn(mainThread())
         .subscribe(
