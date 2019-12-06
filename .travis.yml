@@ -41,10 +41,6 @@ android:
  - google-gdk-license-.+
  
  before_install:
- - wget --no-check-certificate https://www.apache.org/dist/ant/binaries/apache-ant-1.10.1-bin.tar.gz
- - tar -xzvf apache-ant-1.10.1-bin.tar.gz
- - export PATH=`pwd`/apache-ant-1.10.1/bin:$PATH
- - echo $(ant -version)
  - openssl aes-256-cbc -K $encrypted_d6d8f02ac07e_key -iv $encrypted_d6d8f02ac07e_iv -in keystore.jks.enc -out keystore.jks -d
  - chmod +x gradlew
 
@@ -67,3 +63,6 @@ deploy:
     jdk: oraclejdk8
   api_key:
     secure: "YrS7Oj57JHJXfqAkJ//mhgRYEDAA/79jwTEYeO671B2HL4PfgWLpXdKeKGegq6ydaLN1YIJtc18tc8HEsEhR48l3Ux9bsARNbOZofzoYdZKq4WW8OXxcEL8rtKdD5N6M9Hd7WxlWWJ0Cfdi+XpQKaWY243+5ogs/s3+71F7Vv3qUO73wYt9c7cXWPSwgeHy2yqCQLK6Bs4Xl/vi3/Jt29LRr1rwh6isRd3EiNmq4cyGELTV2avHwAc0ZxR++4ofk1/6A+gBkFOCebIBNHV+d9hA30Lre0rDCez91Pz1CH295lhgbRvnvKeTPpRs0aU159GBKZg5C0ooOcDQ8X51mmmIlqzjbuZEIAJOXJ8KtP2Q0BQAJKwpz7JkPjP2pGgDPPu5xW4Xyw2ojG2Qag06Ec0uUdvFfmUqkC2nw1gCHHic5PR36QbCvAABhXqJO7kS8C13zTCLOetxsoLfzZH6Zmdt04csJamsZQvjwIXw9tFoOGns71Mg1nxYeiy7nkohSLHhyNzTPvPt+/Hhfn3cNz2iDD/KEcfK/NlC4kzP2+HNjkZEVuAsA1P1A/mz7ZB0X/uvwOraZBZzLVlKVWvbBBaS3kFn5TUsmjNuU1JSNwZlqHM+VvKnPTwfVG2icVNBnoyCc4vkOPtB4Kh1TNI4Inf8TnRsEqCagM+K40LbK+og="
+
+script:
+    - ./gradlew build check
