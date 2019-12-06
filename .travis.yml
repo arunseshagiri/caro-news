@@ -1,16 +1,66 @@
 language: android
+sudo: required
+jdk: oraclejdk8
+
+before_cache:
+ -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+ -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+ directories:
+ -$HOME/.gradle/caches/
+ -$HOME/.gradle/wrapper/
+ 
+env:
+ global:
+ - ANDROID_API=29
+ - EMULATOR_API=21
+ - ANDROID_BUILD_TOOLS=29.0.0
+ - ADB_INSTALL_TIMEOUT=5 # minutes
+ - secure: "psqaT3TVl+torTpG2SXDWEgebk/Hs64PN+D9Dq0bZ5gZTrvhEf2vaTcZxC93VyhAGtddKytxhl40UR1v15tKeI3bgMmqPqyYUSgxqRe1IVxXHU8E5hQksJuPmVvkw0Yev+4ziAiqu71lQXUlRUR53T5jv+DCXkqlBGC+mwgTK9qj2UjbJRU6QcqeSsQhbRaIcal+9xPm4BmoiC6/ajGqK2/5eAbOlhZm25USHNvfJsZZcfV1bjI13oLvxl+B8k//y04ogIE+a+JW2uzlmV3Fpz5wBeouTIs52V6/L/R0TRCrkRvRdvwTzOQUEoeW/VPO+rIxJ6NdzFE1v0Tbuw9COh0V0pyd9hMP318HRmckV4oLOP7liyD1cElTKLAv/7jrAynJAxj7NU04frIEOquPCLLo4dqLon6Uym+pOuwnp93ao43jTpNocB1t7iqapUblms4geeJtqDCY8GkdjkYPu5TKE0X7PDgrpHKFChHp1RxbmvSQAZvoMVS6Chib2dI6E1SSVgEyNktHpUK2yjWoxkVqiBc+Pf0sBcTaG9MILdqxwqauzGxrAwF4pQAIU9X8vbZDX+bzca4+Be+2eUNDyTgbcslqBdMcRZh8n925hmmfJ7N1Xa/thoWEQuKg+vMHqrBhRkQLYaiB5cujFDyy0ajLzi204ZSAsDMCbLBzkH0="
+ - secure: "FdOhl/LKNcTi29aEEe2mKnxlD/9YF20DfcLcXr9s+OfyYl1SfFQkWTkT9/G9xiAeI07EDGPd2BmHChIrDB3vzEwG7H3+iKcqBGYTVL45KEu76XJBLx1laRvj4CwC23aNywV4KCzv2o5JMYw/LsJtMPeY3RfcZTdl71Dz2+jNd+e2mo4oOg7qH3qDPjAD7VAZIMC2ubYytQ6sEQsctJYzoRdJpiA7vY6dwthKlRTOrWrEAiGbJXybNerwLA4kllG8RNK9AAAYk5mg2lawqwpdsCHcmZXltj9eJdiXsa0Ask08G2kFAp+uHgrKdK4I44+oQ6i6Gb1vv7TmXccwkElogok26s9ZTGjNOWP3ORMXkYjFW8MmrRjJgeR7GIG6E0cg3eTlh9susbsZEKvjObVmwObZs40ehXpIZ7pFm1mdTUuln8ZI0t0txY3CN9G3nQY1S0fK9punsOhnlEqHZ5Dgfsamdf8VO0RAuWA3vdMoom/HVDMqf5M+YAGE4sfGZPOqgRjguElscvOCOS8xP8v+Hw/IN7PH0p2ENdO6PRYye7SNRcnwbsTbUoSpj2KlOrBKi+fdaHLlQ1XTUIyLpQBxUSnUC+MNi3Wg2VOqgkZCsyyICCK+/ax+jUKr0mRzx0oCvPVds1d5f1BcePz6qSSyL5/1Sbq8T3pqe8m4PoiVWbQ="
+
 dist: trusty
 install: ant deps
 android:
-  components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - tools
-    # - platform-tools
+ components:
+ - tools
+ - platform-tools
+ - build-tools-$ANDROID_BUILD_TOOLS
+ - android-$ANDROID_API
+ - android-$EMULATOR_API_LEVEL
+ - extra-google-m2repository
+ - extra-android-m2repository # for design library
+ - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API_LEVEL
+ - sys-img-armeabi-v7a-addon-google_apis-google-$EMULATOR_API_LEVEL
+ licenses:
+ - android-sdk-preview-license-.+
+ - android-sdk-license-.+
+ - google-gdk-license-.+
+ 
+ openssl aes-256-cbc -K $encrypted_d6d8f02ac07e_key -iv $encrypted_d6d8f02ac07e_iv -in keystore.jks.enc -out keystore.jks -d
+ 
+ before_install:
+- chmod +x gradlew
 
-    # The BuildTools version used by your project
-    - build-tools-29.0.0
+before_deploy:
+- cp $TRAVIS_BUILD_DIR/.keystore $HOME
+- cd app/build/outputs/apk/
+- jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $HOME/keystore.jks -storepass $storepass -keypass $keypass app-release-unsigned.apk caro_key
 
-    # The SDK version used to compile your project
-    - android-29
+# Verification
+- jarsigner -verify app-release-unsigned.apk
+- "${ANDROID_HOME}/build-tools/24.0.2/zipalign -v 4 app-release-unsigned.apk caro_news.apk"
+
+deploy:
+  provider: releases
+  file: caro_news.apk
+  skip_cleanup: true
+  on:
+    repo: arunseshagiri/caro-news
+    tags: true
+    jdk: oraclejdk8
+  api_key:
+    secure: "YrS7Oj57JHJXfqAkJ//mhgRYEDAA/79jwTEYeO671B2HL4PfgWLpXdKeKGegq6ydaLN1YIJtc18tc8HEsEhR48l3Ux9bsARNbOZofzoYdZKq4WW8OXxcEL8rtKdD5N6M9Hd7WxlWWJ0Cfdi+XpQKaWY243+5ogs/s3+71F7Vv3qUO73wYt9c7cXWPSwgeHy2yqCQLK6Bs4Xl/vi3/Jt29LRr1rwh6isRd3EiNmq4cyGELTV2avHwAc0ZxR++4ofk1/6A+gBkFOCebIBNHV+d9hA30Lre0rDCez91Pz1CH295lhgbRvnvKeTPpRs0aU159GBKZg5C0ooOcDQ8X51mmmIlqzjbuZEIAJOXJ8KtP2Q0BQAJKwpz7JkPjP2pGgDPPu5xW4Xyw2ojG2Qag06Ec0uUdvFfmUqkC2nw1gCHHic5PR36QbCvAABhXqJO7kS8C13zTCLOetxsoLfzZH6Zmdt04csJamsZQvjwIXw9tFoOGns71Mg1nxYeiy7nkohSLHhyNzTPvPt+/Hhfn3cNz2iDD/KEcfK/NlC4kzP2+HNjkZEVuAsA1P1A/mz7ZB0X/uvwOraZBZzLVlKVWvbBBaS3kFn5TUsmjNuU1JSNwZlqHM+VvKnPTwfVG2icVNBnoyCc4vkOPtB4Kh1TNI4Inf8TnRsEqCagM+K40LbK+og="
+    
    
