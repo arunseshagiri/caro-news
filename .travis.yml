@@ -41,6 +41,10 @@ android:
  - google-gdk-license-.+
  
  before_install:
+ - wget --no-check-certificate https://www.apache.org/dist/ant/binaries/apache-ant-1.10.1-bin.tar.gz
+ - tar -xzvf apache-ant-1.10.1-bin.tar.gz
+ - export PATH=`pwd`/apache-ant-1.10.1/bin:$PATH
+ - echo $(ant -version)
  - openssl aes-256-cbc -K $encrypted_d6d8f02ac07e_key -iv $encrypted_d6d8f02ac07e_iv -in keystore.jks.enc -out keystore.jks -d
  - chmod +x gradlew
 
