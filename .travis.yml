@@ -45,7 +45,7 @@ before_script:
  - chmod +x CarousellNews/gradlew
 
 script:
- - CarousellNews/gradlew build check
+ - CarousellNews/gradlew -p CarousellNews build check
 
 before_deploy:
 - cp $TRAVIS_BUILD_DIR/.keystore $HOME
