@@ -41,7 +41,9 @@ android:
  
 before_install:
  - openssl aes-256-cbc -K $encrypted_d6d8f02ac07e_key -iv $encrypted_d6d8f02ac07e_iv -in keystore.jks.enc -out keystore.jks -d
- - chmod +x ./gradlew
+
+before_script: 
+ - chmod +x gradlew
 
 script:
  - ./gradlew build check
