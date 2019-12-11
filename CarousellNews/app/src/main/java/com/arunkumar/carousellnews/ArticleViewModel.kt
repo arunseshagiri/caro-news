@@ -12,8 +12,10 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
     private var showProgress: PublishSubject<Unit> = PublishSubject.create()
     private var hideProgress: PublishSubject<Unit> = PublishSubject.create()
     private var showError: PublishSubject<String> = PublishSubject.create()
-    private var articleListSortedForRecent: PublishSubject<MutableList<Articles>> = PublishSubject.create()
-    private var articleListSortedForPopular: PublishSubject<MutableList<Articles>> = PublishSubject.create()
+    private var articleListSortedForRecent: PublishSubject<MutableList<Articles>> =
+        PublishSubject.create()
+    private var articleListSortedForPopular: PublishSubject<MutableList<Articles>> =
+        PublishSubject.create()
 
     fun onCreate() {
         fetchArticles()
@@ -27,20 +29,28 @@ class ArticleViewModel(private val articlesApiService: ArticlesApiService) {
 
     fun showError(): PublishSubject<String> = showError
 
-    fun articleListSortedForRecent(): PublishSubject<MutableList<Articles>> = articleListSortedForRecent
-    fun articleListSortedForPopular(): PublishSubject<MutableList<Articles>> = articleListSortedForPopular
+    fun articleListSortedForRecent(): PublishSubject<MutableList<Articles>> =
+        articleListSortedForRecent
+
+    fun articleListSortedForPopular(): PublishSubject<MutableList<Articles>> =
+        articleListSortedForPopular
 
     private fun fetchArticles() = articlesApiService
         .articles()
+        .toObservable()
+        .map { aa -> aa.products.values.toList() }
         .observeOn(mainThread())
-        .doOnEvent { _, _ -> hideProgress().onNext(Unit) }
+        .doOnError { hideProgress().onNext(Unit) }
+        .doOnComplete { hideProgress().onNext(Unit) }
         .doOnSubscribe { showProgress().onNext(Unit) }
         .map { it -> it.sortedWith(compareByDescending { it.timeCreated }).toMutableList() }
         .subscribe(
             {
                 updateArticleList().onNext(it)
             },
-            { showError().onNext(it.message!!) }
+            {
+                showError().onNext(it.message!!)
+            }
         )
 
     fun sortBasedOnRecentArticle(articleList: List<Articles>) = Single
