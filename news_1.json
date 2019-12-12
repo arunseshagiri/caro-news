@@ -1,4 +1,4 @@
-{
+/*jsonp*/s7jsonResponse({
   "products": {
     "1": {
       "id": "121",
@@ -49,4 +49,4 @@
       "rank": 7
     }
   }
-}
+},"PDP");
