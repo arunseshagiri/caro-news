@@ -1,4 +1,5 @@
 /*jsonp*/s7jsonResponse({
+  "test": "rest",
   "products": {
     "1": {
       "id": "121",
