@@ -1,7 +1,7 @@
 
 [![Build status](https://travis-ci.com/arunseshagiri/caro-news.svg?branch=master)](https://travis-ci.com/arunseshagiri/caro-news)
 
-# caro-news
+# caro-news.
 * A simple app to read the news from backend and display it in a card view.
 * Sort the articles based on the time creation by default
 * When user selects “recent” sorting option from actionbar menu, display the list sorted by the time
